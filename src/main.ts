@@ -2,17 +2,25 @@ import * as core from "@actions/core"
 import fs from "fs/promises"
 
 const getDependabotFile = async () => {
-  try {
-    const file = await fs.readFile("/.github/dependabot.yml")
+  let file
 
-    console.log(file)
+  try {
+    file = await fs.readFile("/.github/dependabot.yml")
+
+    return file
   } catch (error) {
-    console.error(error)
+    file = `
+  version: 2
+  updates:[]`
+
+    return file
   }
 }
 
 export async function run(): Promise<void> {
   try {
+    const dependabotFile = await getDependabotFile()
+
     const npmPaths: string = core.getInput("npm-paths")
     const npmPathsList: string[] = npmPaths.split(",")
 
@@ -24,7 +32,7 @@ export async function run(): Promise<void> {
 
     console.log(npmPathsList, actionPathsList, tfPathsList)
 
-    await getDependabotFile()
+    console.log("CFG", dependabotFile)
   } catch (error) {
     console.error(error)
   }
