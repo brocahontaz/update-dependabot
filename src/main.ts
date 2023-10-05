@@ -39,8 +39,12 @@ export async function run(): Promise<void> {
     const actionPaths: string = core.getInput("action-paths")
     const actionPathsList: string[] = actionPaths.split(",")
 
+    const actionsGlob = findMatchingfiles(actionPathsList)
+
     const tfPaths: string = core.getInput("tf-paths")
     const tfPathsList: string[] = tfPaths.split(",")
+
+    const tfGlob = findMatchingfiles(tfPathsList)
 
     console.log(npmPathsList, actionPathsList, tfPathsList)
 
@@ -49,6 +53,8 @@ export async function run(): Promise<void> {
     console.log("STATE?", state)
 
     console.log("NPM?", npmGlob)
+    console.log("ACTIONS?", actionsGlob)
+    console.log("TF?", tfGlob)
   } catch (error) {
     console.error(error)
   }
