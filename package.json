@@ -1,0 +1,24 @@
+{
+  "name": "update-dependabot",
+  "version": "1.0.0",
+  "description": "Action to update dependabot config",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brocahontaz/update-dependabot.git"
+  },
+  "keywords": [
+    "github-actions",
+    "action",
+    "dependabot"
+  ],
+  "author": "Johan Fjällbark",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brocahontaz/update-dependabot/issues"
+  },
+  "homepage": "https://github.com/brocahontaz/update-dependabot#readme"
+}
