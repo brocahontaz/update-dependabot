@@ -3084,12 +3084,16 @@ async function run() {
         console.log("NPM?", npmPaths);
         console.log("ACTIONS?", actionPaths);
         console.log("TF?", tfPaths);
-        const npmConfigs = buildConfigs(npmPaths, "npm", core.getInput("npm-schedule"));
-        const actionConfigs = buildConfigs(npmPaths, "github-actions", core.getInput("action-schedule"));
-        const tfConfigs = buildConfigs(npmPaths, "terraform", core.getInput("tf-schedule"));
+        const npmConfigs = await buildConfigs(npmPaths, "npm", core.getInput("npm-schedule"));
+        const actionConfigs = await buildConfigs(npmPaths, "github-actions", core.getInput("action-schedule"));
+        const tfConfigs = await buildConfigs(npmPaths, "terraform", core.getInput("tf-schedule"));
         console.log(npmConfigs, actionConfigs, tfConfigs);
         state.updates = state.updates.concat(npmConfigs, actionConfigs, tfConfigs);
         console.log(state);
+        const newDocument = new yaml_1.default.Document(state);
+        await promises_1.default.writeFile(dependabotFile, String(newDocument));
+        const file = await getDependabotFile();
+        console.log(file);
     }
     catch (error) {
         console.error(error);
