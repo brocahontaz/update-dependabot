@@ -4,11 +4,13 @@ import { glob } from "glob"
 import YAML from "yaml"
 import path from "path"
 
+const DEPENDABOT_FILE = "./.github/dependabot.yml"
+
 const getDependabotFile = async () => {
   let file
 
   try {
-    file = await fs.readFile("/.github/dependabot.yml")
+    file = await fs.readFile(DEPENDABOT_FILE)
 
     return file
   } catch (error) {
@@ -88,7 +90,7 @@ export async function run(): Promise<void> {
     console.log(state)
 
     const newDocument = new YAML.Document(state)
-    await fs.writeFile(dependabotFile, String(newDocument))
+    await fs.writeFile(DEPENDABOT_FILE, String(newDocument))
 
     const file = await getDependabotFile()
     console.log(file)

@@ -3040,10 +3040,11 @@ const promises_1 = __importDefault(__nccwpck_require__(3292));
 const glob_1 = __nccwpck_require__(8211);
 const yaml_1 = __importDefault(__nccwpck_require__(4083));
 const path_1 = __importDefault(__nccwpck_require__(1017));
+const DEPENDABOT_FILE = "./.github/dependabot.yml";
 const getDependabotFile = async () => {
     let file;
     try {
-        file = await promises_1.default.readFile("/.github/dependabot.yml");
+        file = await promises_1.default.readFile(DEPENDABOT_FILE);
         return file;
     }
     catch (error) {
@@ -3091,7 +3092,7 @@ async function run() {
         state.updates = state.updates.concat(npmConfigs, actionConfigs, tfConfigs);
         console.log(state);
         const newDocument = new yaml_1.default.Document(state);
-        await promises_1.default.writeFile(dependabotFile, String(newDocument));
+        await promises_1.default.writeFile(DEPENDABOT_FILE, String(newDocument));
         const file = await getDependabotFile();
         console.log(file);
     }
