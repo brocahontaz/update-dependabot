@@ -2,11 +2,16 @@ import * as core from "@actions/core"
 
 export async function run(): Promise<void> {
   try {
-    const paths: string = core.getInput("paths")
+    const npmPaths: string = core.getInput("npm-paths")
+    const npmPathsList: string[] = npmPaths.split(",")
 
-    const pathsList: string[] = paths.split(",")
+    const actionPaths: string = core.getInput("action-paths")
+    const actionPathsList: string[] = actionPaths.split(",")
 
-    console.log(pathsList)
+    const tfPaths: string = core.getInput("tf-paths")
+    const tfPathsList: string[] = tfPaths.split(",")
+
+    console.log(npmPathsList, actionPathsList, tfPathsList)
   } catch (error) {
     console.error(error)
   }

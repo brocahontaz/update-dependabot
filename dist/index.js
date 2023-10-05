@@ -2755,9 +2755,13 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(186));
 async function run() {
     try {
-        const paths = core.getInput("paths");
-        const pathsList = paths.split(",");
-        console.log(pathsList);
+        const npmPaths = core.getInput("npm-paths");
+        const npmPathsList = npmPaths.split(",");
+        const actionPaths = core.getInput("action-paths");
+        const actionPathsList = actionPaths.split(",");
+        const tfPaths = core.getInput("tf-paths");
+        const tfPathsList = tfPaths.split(",");
+        console.log(npmPathsList, actionPathsList, tfPathsList);
     }
     catch (error) {
         console.error(error);

@@ -3,8 +3,16 @@ description: Update dependabot config automatically
 author: Johan Fjällbark
 
 inputs:
-  paths:
-    description: Paths to filter on
+  action-paths:
+    description: Paths to filter on for actions
+    required: false
+    default: ""
+  npm-paths:
+    description: Paths to filter on for npm
+    required: false
+    default: ""
+  tf-paths:
+    description: Paths to filter on for terraform
     required: false
     default: ""
 
