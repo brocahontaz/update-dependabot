@@ -43,9 +43,9 @@ const buildConfigs = async (
   schedule: string,
 ) => {
   const configs = paths.map((path) => ({
-    "package-ecosystem": `"${ecosystem}"`,
-    directory: `"${path}/"`,
-    schedule: { interval: `"${schedule}"` },
+    "package-ecosystem": `${ecosystem}`,
+    directory: `${path}/`,
+    schedule: { interval: `${schedule}` },
   }))
 
   configs.sort()
@@ -83,8 +83,10 @@ export async function run(): Promise<void> {
 
     console.log(state.updates)
 
+    const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs]
+
     state.updates = [
-      ...new Set(state.updates.concat(npmConfigs, actionConfigs, tfConfigs)),
+      ...new Set(state.updates.concat(allConfigs)),
     ]
 
     console.log(state.updates)
