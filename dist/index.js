@@ -2758,16 +2758,21 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(186));
 const promises_1 = __importDefault(__nccwpck_require__(292));
 const getDependabotFile = async () => {
+    let file;
     try {
-        const file = await promises_1.default.readFile("/.github/dependabot.yml");
-        console.log(file);
+        file = await promises_1.default.readFile("/.github/dependabot.yml");
+        return file;
     }
     catch (error) {
-        console.error(error);
+        file = `
+  version: 2
+  updates:[]`;
+        return file;
     }
 };
 async function run() {
     try {
+        const dependabotFile = await getDependabotFile();
         const npmPaths = core.getInput("npm-paths");
         const npmPathsList = npmPaths.split(",");
         const actionPaths = core.getInput("action-paths");
@@ -2775,7 +2780,7 @@ async function run() {
         const tfPaths = core.getInput("tf-paths");
         const tfPathsList = tfPaths.split(",");
         console.log(npmPathsList, actionPathsList, tfPathsList);
-        await getDependabotFile();
+        console.log("CFG", dependabotFile);
     }
     catch (error) {
         console.error(error);
