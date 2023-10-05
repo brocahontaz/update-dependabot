@@ -20,12 +20,35 @@ const getDependabotFile = async () => {
   }
 }
 
-const findMatchingPaths = async (list: string[]) => {
+const extractPaths = async (list: string[]) => {
   const files = await glob(list)
-
   const paths = [...new Set(files.map((file) => path.dirname(file)))]
 
   return paths
+}
+
+const getPaths = async (type: string) => {
+  const input: string = core.getInput(type)
+  const inputList: string[] = input.split(",")
+  const paths = await extractPaths(inputList)
+
+  return paths
+}
+
+const buildConfigs = async (
+  paths: string[],
+  ecosystem: string,
+  schedule: string,
+) => {
+  const configs = paths.map((path) => ({
+    "package-ecosystem": ecosystem,
+    directory: `${path}/`,
+    schedule: { interval: schedule },
+  }))
+
+  configs.sort()
+
+  return configs
 }
 
 export async function run(): Promise<void> {
@@ -34,30 +57,35 @@ export async function run(): Promise<void> {
     const currentDocument = YAML.parseDocument(dependabotFile.toString())
     const state = currentDocument.toJS()
 
-    const npmPaths: string = core.getInput("npm-paths")
-    const npmPathsList: string[] = npmPaths.split(",")
+    const npmPaths: string[] = await getPaths("npm-paths")
+    const actionPaths: string[] = await getPaths("action-paths")
+    const tfPaths: string[] = await getPaths("tf-paths")
 
-    const npmList = await findMatchingPaths(npmPathsList)
+    console.log("NPM?", npmPaths)
+    console.log("ACTIONS?", actionPaths)
+    console.log("TF?", tfPaths)
 
-    const actionPaths: string = core.getInput("action-paths")
-    const actionPathsList: string[] = actionPaths.split(",")
+    const npmConfigs = buildConfigs(
+      npmPaths,
+      "npm",
+      core.getInput("npm-schedule"),
+    )
+    const actionConfigs = buildConfigs(
+      npmPaths,
+      "github-actions",
+      core.getInput("action-schedule"),
+    )
+    const tfConfigs = buildConfigs(
+      npmPaths,
+      "terraform",
+      core.getInput("tf-schedule"),
+    )
 
-    const actionsList = await findMatchingPaths(actionPathsList)
+    console.log(npmConfigs, actionConfigs, tfConfigs)
 
-    const tfPaths: string = core.getInput("tf-paths")
-    const tfPathsList: string[] = tfPaths.split(",")
+    state.updates = state.updates.concat(npmConfigs, actionConfigs, tfConfigs)
 
-    const tfList = await findMatchingPaths(tfPathsList)
-
-    console.log(npmPathsList, actionPathsList, tfPathsList)
-
-    console.log("CFG?", dependabotFile)
-    console.log("DOC?", currentDocument)
-    console.log("STATE?", state)
-
-    console.log("NPM?", npmList)
-    console.log("ACTIONS?", actionsList)
-    console.log("TF?", tfList)
+    console.log(state)
   } catch (error) {
     console.error(error)
   }

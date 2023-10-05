@@ -7,14 +7,22 @@ inputs:
     description: Paths to filter on for actions
     required: false
     default: ""
+  action-schedule:
+    description: Schedule for action updates
+
   npm-paths:
     description: Paths to filter on for npm
     required: false
     default: ""
+  npm-schedule:
+    description: Schedule for npm updates
+
   tf-paths:
     description: Paths to filter on for terraform
     required: false
     default: ""
+  tf-schedule:
+    description: Schedule for terraform updates
 
 # outputs:
 

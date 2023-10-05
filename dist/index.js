@@ -3053,32 +3053,43 @@ const getDependabotFile = async () => {
         return file;
     }
 };
-const findMatchingPaths = async (list) => {
+const extractPaths = async (list) => {
     const files = await (0, glob_1.glob)(list);
     const paths = [...new Set(files.map((file) => path_1.default.dirname(file)))];
     return paths;
+};
+const getPaths = async (type) => {
+    const input = core.getInput(type);
+    const inputList = input.split(",");
+    const paths = await extractPaths(inputList);
+    return paths;
+};
+const buildConfigs = async (paths, ecosystem, schedule) => {
+    const configs = paths.map((path) => ({
+        "package-ecosystem": ecosystem,
+        directory: `${path}/`,
+        schedule: { interval: schedule },
+    }));
+    configs.sort();
+    return configs;
 };
 async function run() {
     try {
         const dependabotFile = await getDependabotFile();
         const currentDocument = yaml_1.default.parseDocument(dependabotFile.toString());
         const state = currentDocument.toJS();
-        const npmPaths = core.getInput("npm-paths");
-        const npmPathsList = npmPaths.split(",");
-        const npmList = await findMatchingPaths(npmPathsList);
-        const actionPaths = core.getInput("action-paths");
-        const actionPathsList = actionPaths.split(",");
-        const actionsList = await findMatchingPaths(actionPathsList);
-        const tfPaths = core.getInput("tf-paths");
-        const tfPathsList = tfPaths.split(",");
-        const tfList = await findMatchingPaths(tfPathsList);
-        console.log(npmPathsList, actionPathsList, tfPathsList);
-        console.log("CFG?", dependabotFile);
-        console.log("DOC?", currentDocument);
-        console.log("STATE?", state);
-        console.log("NPM?", npmList);
-        console.log("ACTIONS?", actionsList);
-        console.log("TF?", tfList);
+        const npmPaths = await getPaths("npm-paths");
+        const actionPaths = await getPaths("action-paths");
+        const tfPaths = await getPaths("tf-paths");
+        console.log("NPM?", npmPaths);
+        console.log("ACTIONS?", actionPaths);
+        console.log("TF?", tfPaths);
+        const npmConfigs = buildConfigs(npmPaths, "npm", core.getInput("npm-schedule"));
+        const actionConfigs = buildConfigs(npmPaths, "github-actions", core.getInput("action-schedule"));
+        const tfConfigs = buildConfigs(npmPaths, "terraform", core.getInput("tf-schedule"));
+        console.log(npmConfigs, actionConfigs, tfConfigs);
+        state.updates = state.updates.concat(npmConfigs, actionConfigs, tfConfigs);
+        console.log(state);
     }
     catch (error) {
         console.error(error);
