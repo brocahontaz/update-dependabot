@@ -2767,7 +2767,7 @@ const getDependabotFile = async () => {
     catch (error) {
         file = `
   version: 2
-  updates:[]`;
+  updates: []`;
         return file;
     }
 };
