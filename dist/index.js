@@ -3063,13 +3063,13 @@ async function run() {
         const state = currentDocument.toJS();
         const npmPaths = core.getInput("npm-paths");
         const npmPathsList = npmPaths.split(",");
-        const npmGlob = findMatchingfiles(npmPathsList);
+        const npmGlob = await findMatchingfiles(npmPathsList);
         const actionPaths = core.getInput("action-paths");
         const actionPathsList = actionPaths.split(",");
-        const actionsGlob = findMatchingfiles(actionPathsList);
+        const actionsGlob = await findMatchingfiles(actionPathsList);
         const tfPaths = core.getInput("tf-paths");
         const tfPathsList = tfPaths.split(",");
-        const tfGlob = findMatchingfiles(tfPathsList);
+        const tfGlob = await findMatchingfiles(tfPathsList);
         console.log(npmPathsList, actionPathsList, tfPathsList);
         console.log("CFG?", dependabotFile);
         console.log("DOC?", currentDocument);

@@ -34,17 +34,17 @@ export async function run(): Promise<void> {
     const npmPaths: string = core.getInput("npm-paths")
     const npmPathsList: string[] = npmPaths.split(",")
 
-    const npmGlob = findMatchingfiles(npmPathsList)
+    const npmGlob = await findMatchingfiles(npmPathsList)
 
     const actionPaths: string = core.getInput("action-paths")
     const actionPathsList: string[] = actionPaths.split(",")
 
-    const actionsGlob = findMatchingfiles(actionPathsList)
+    const actionsGlob = await findMatchingfiles(actionPathsList)
 
     const tfPaths: string = core.getInput("tf-paths")
     const tfPathsList: string[] = tfPaths.split(",")
 
-    const tfGlob = findMatchingfiles(tfPathsList)
+    const tfGlob = await findMatchingfiles(tfPathsList)
 
     console.log(npmPathsList, actionPathsList, tfPathsList)
 
