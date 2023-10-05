@@ -1,5 +1,6 @@
 import * as core from "@actions/core"
 import fs from "fs/promises"
+import { glob, globSync, globStream, globStreamSync, Glob } from "glob"
 import YAML from "yaml"
 
 const getDependabotFile = async () => {
@@ -18,6 +19,12 @@ const getDependabotFile = async () => {
   }
 }
 
+const findMatchingfiles = async (list: string[]) => {
+  const files = await glob(list)
+
+  return files
+}
+
 export async function run(): Promise<void> {
   try {
     const dependabotFile = await getDependabotFile()
@@ -26,6 +33,8 @@ export async function run(): Promise<void> {
 
     const npmPaths: string = core.getInput("npm-paths")
     const npmPathsList: string[] = npmPaths.split(",")
+
+    const npmGlob = findMatchingfiles(npmPathsList)
 
     const actionPaths: string = core.getInput("action-paths")
     const actionPathsList: string[] = actionPaths.split(",")
@@ -38,6 +47,8 @@ export async function run(): Promise<void> {
     console.log("CFG?", dependabotFile)
     console.log("DOC?", currentDocument)
     console.log("STATE?", state)
+
+    console.log("NPM?", npmGlob)
   } catch (error) {
     console.error(error)
   }
