@@ -73,12 +73,12 @@ export async function run(): Promise<void> {
       core.getInput("npm-schedule"),
     )
     const actionConfigs = await buildConfigs(
-      npmPaths,
+      actionPaths,
       "github-actions",
       core.getInput("action-schedule"),
     )
     const tfConfigs = await buildConfigs(
-      npmPaths,
+      tfPaths,
       "terraform",
       core.getInput("tf-schedule"),
     )
@@ -92,8 +92,9 @@ export async function run(): Promise<void> {
     const newDocument = new YAML.Document(state)
     await fs.writeFile(DEPENDABOT_FILE, String(newDocument))
 
-    const file = await getDependabotFile()
-    console.log(file)
+    const newFile = await getDependabotFile()
+    const newDoc = YAML.parseDocument(newFile.toString())
+    console.log(newDoc)
   } catch (error) {
     console.error(error)
   }
