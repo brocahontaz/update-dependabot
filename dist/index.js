@@ -2750,9 +2750,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(186));
+const promises_1 = __importDefault(__nccwpck_require__(292));
+const getDependabotFile = async () => {
+    try {
+        const file = await promises_1.default.readFile("/.github/dependabot.yml");
+        console.log(file);
+    }
+    catch (error) {
+        console.error(error);
+    }
+};
 async function run() {
     try {
         const npmPaths = core.getInput("npm-paths");
@@ -2762,6 +2775,7 @@ async function run() {
         const tfPaths = core.getInput("tf-paths");
         const tfPathsList = tfPaths.split(",");
         console.log(npmPathsList, actionPathsList, tfPathsList);
+        await getDependabotFile();
     }
     catch (error) {
         console.error(error);
@@ -2801,6 +2815,14 @@ module.exports = require("events");
 
 "use strict";
 module.exports = require("fs");
+
+/***/ }),
+
+/***/ 292:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs/promises");
 
 /***/ }),
 
