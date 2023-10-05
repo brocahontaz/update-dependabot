@@ -1,5 +1,6 @@
 import * as core from "@actions/core"
 import fs from "fs/promises"
+import YAML from "yaml"
 
 const getDependabotFile = async () => {
   let file
@@ -20,6 +21,8 @@ const getDependabotFile = async () => {
 export async function run(): Promise<void> {
   try {
     const dependabotFile = await getDependabotFile()
+    const currentDocument = YAML.parseDocument(dependabotFile.toString())
+    const state = currentDocument.toJS()
 
     const npmPaths: string = core.getInput("npm-paths")
     const npmPathsList: string[] = npmPaths.split(",")
@@ -32,7 +35,9 @@ export async function run(): Promise<void> {
 
     console.log(npmPathsList, actionPathsList, tfPathsList)
 
-    console.log("CFG", dependabotFile)
+    console.log("CFG?", dependabotFile)
+    console.log("DOC?", currentDocument)
+    console.log("STATE?", state)
   } catch (error) {
     console.error(error)
   }
