@@ -1,4 +1,15 @@
 import * as core from "@actions/core"
+import fs from "fs/promises"
+
+const getDependabotFile = async () => {
+  try {
+    const file = await fs.readFile("/.github/dependabot.yml")
+
+    console.log(file)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 export async function run(): Promise<void> {
   try {
@@ -12,6 +23,9 @@ export async function run(): Promise<void> {
     const tfPathsList: string[] = tfPaths.split(",")
 
     console.log(npmPathsList, actionPathsList, tfPathsList)
+
+    await getDependabotFile()
+
   } catch (error) {
     console.error(error)
   }
