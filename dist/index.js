@@ -3039,6 +3039,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const promises_1 = __importDefault(__nccwpck_require__(3292));
 const glob_1 = __nccwpck_require__(8211);
 const yaml_1 = __importDefault(__nccwpck_require__(4083));
+const path_1 = __importDefault(__nccwpck_require__(1017));
 const getDependabotFile = async () => {
     let file;
     try {
@@ -3052,9 +3053,10 @@ const getDependabotFile = async () => {
         return file;
     }
 };
-const findMatchingfiles = async (list) => {
+const findMatchingPaths = async (list) => {
     const files = await (0, glob_1.glob)(list);
-    return files;
+    const paths = [...new Set(files.map((file) => path_1.default.dirname(file)))];
+    return paths;
 };
 async function run() {
     try {
@@ -3063,20 +3065,20 @@ async function run() {
         const state = currentDocument.toJS();
         const npmPaths = core.getInput("npm-paths");
         const npmPathsList = npmPaths.split(",");
-        const npmGlob = await findMatchingfiles(npmPathsList);
+        const npmList = await findMatchingPaths(npmPathsList);
         const actionPaths = core.getInput("action-paths");
         const actionPathsList = actionPaths.split(",");
-        const actionsGlob = await findMatchingfiles(actionPathsList);
+        const actionsList = await findMatchingPaths(actionPathsList);
         const tfPaths = core.getInput("tf-paths");
         const tfPathsList = tfPaths.split(",");
-        const tfGlob = await findMatchingfiles(tfPathsList);
+        const tfList = await findMatchingPaths(tfPathsList);
         console.log(npmPathsList, actionPathsList, tfPathsList);
         console.log("CFG?", dependabotFile);
         console.log("DOC?", currentDocument);
         console.log("STATE?", state);
-        console.log("NPM?", npmGlob);
-        console.log("ACTIONS?", actionsGlob);
-        console.log("TF?", tfGlob);
+        console.log("NPM?", npmList);
+        console.log("ACTIONS?", actionsList);
+        console.log("TF?", tfList);
     }
     catch (error) {
         console.error(error);
