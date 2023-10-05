@@ -25,7 +25,6 @@ export async function run(): Promise<void> {
     console.log(npmPathsList, actionPathsList, tfPathsList)
 
     await getDependabotFile()
-
   } catch (error) {
     console.error(error)
   }
