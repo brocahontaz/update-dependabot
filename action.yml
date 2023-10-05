@@ -9,6 +9,8 @@ inputs:
     default: ""
   action-schedule:
     description: Schedule for action updates
+    required: false
+    default: "weekly"
 
   npm-paths:
     description: Paths to filter on for npm
@@ -16,6 +18,8 @@ inputs:
     default: ""
   npm-schedule:
     description: Schedule for npm updates
+    required: false
+    default: "weekly"
 
   tf-paths:
     description: Paths to filter on for terraform
@@ -23,6 +27,8 @@ inputs:
     default: ""
   tf-schedule:
     description: Schedule for terraform updates
+    required: false
+    default: "weekly"
 
 # outputs:
 
