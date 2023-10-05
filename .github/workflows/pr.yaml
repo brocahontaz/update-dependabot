@@ -1,0 +1,9 @@
+name: Pull Request
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    uses: brocahontaz/update-dependabot/.github/workflows/check.yaml@feat/add-ci
+    secrets: inherit
