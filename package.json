@@ -20,5 +20,13 @@
   "bugs": {
     "url": "https://github.com/brocahontaz/update-dependabot/issues"
   },
-  "homepage": "https://github.com/brocahontaz/update-dependabot#readme"
+  "homepage": "https://github.com/brocahontaz/update-dependabot#readme",
+  "devDependencies": {
+    "@types/node": "^20.8.2",
+    "eslint": "^8.50.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.3",
+    "prettier-eslint": "^15.0.1",
+    "typescript": "^5.2.2"
+  }
 }
