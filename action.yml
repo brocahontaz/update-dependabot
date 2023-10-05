@@ -1,0 +1,23 @@
+name: update-dependabot
+description: Update dependabot config automatically
+author: Johan Fjällbark
+
+inputs:
+  action-paths:
+    description: Paths to filter on for actions
+    required: false
+    default: ""
+  npm-paths:
+    description: Paths to filter on for npm
+    required: false
+    default: ""
+  tf-paths:
+    description: Paths to filter on for terraform
+    required: false
+    default: ""
+
+# outputs:
+
+runs:
+  using: node20
+  main: dist/index.js
