@@ -1,0 +1,15 @@
+name: update-dependabot
+description: Update dependabot config automatically
+author: Johan Fjällbark
+
+inputs:
+  paths:
+    description: Paths to filter on
+    required: false
+    default: ""
+
+# outputs:
+
+runs:
+  using: node20
+  main: dist/index.js
