@@ -1,0 +1,11 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    uses: brocahontaz/update-dependabot/.github/workflows/check.yaml@feat/add-ci
+    secrets: inherit
