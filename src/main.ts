@@ -1,6 +1,6 @@
 import * as core from "@actions/core"
 import fs from "fs/promises"
-import { glob, globSync, globStream, globStreamSync, Glob } from "glob"
+import { glob } from "glob"
 import YAML from "yaml"
 
 const getDependabotFile = async () => {
