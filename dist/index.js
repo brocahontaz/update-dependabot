@@ -3087,7 +3087,7 @@ async function run() {
         const tfConfigs = await buildConfigs(tfPaths, "terraform", core.getInput("tf-schedule"));
         console.log(state.updates);
         const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs];
-        state.updates = [...new Set(state.updates.concat(allConfigs))];
+        state.updates = allConfigs;
         console.log(state.updates);
         const newDocument = new yaml_1.default.Document(state);
         await promises_1.default.writeFile(DEPENDABOT_FILE, String(newDocument));

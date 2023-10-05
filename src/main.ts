@@ -85,7 +85,7 @@ export async function run(): Promise<void> {
 
     const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs]
 
-    state.updates = [...new Set(state.updates.concat(allConfigs))]
+    state.updates = allConfigs
 
     console.log(state.updates)
 
