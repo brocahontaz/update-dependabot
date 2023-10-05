@@ -4,9 +4,13 @@
   "description": "Action to update dependabot config",
   "main": "index.js",
   "scripts": {
+    "bundle": "npm run format:write && npm run package",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+    "format:write": "prettier --ignore-path .gitignore --write **/*.ts",
+    "format:check": "prettier --ignore-path .gitignore --check **/*.ts",
+    "package": "ncc build src/index.ts --license licenses.txt",
+    "package:watch": "npm run package -- --watch"
   },
   "repository": {
     "type": "git",
@@ -27,6 +31,7 @@
     "@types/node": "^20.8.2",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
+    "@vercel/ncc": "^0.38.0",
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^9.0.0",
     "prettier": "^3.0.3",

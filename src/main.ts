@@ -7,7 +7,6 @@ export async function run(): Promise<void> {
     const pathsList: string[] = paths.split(",")
 
     console.log(pathsList)
-
   } catch (error) {
     console.error(error)
   }
