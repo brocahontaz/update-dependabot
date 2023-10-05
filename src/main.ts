@@ -43,9 +43,9 @@ const buildConfigs = async (
   schedule: string,
 ) => {
   const configs = paths.map((path) => ({
-    "package-ecosystem": ecosystem,
-    directory: `${path}/`,
-    schedule: { interval: schedule },
+    "package-ecosystem": `"${ecosystem}"`,
+    directory: `"${path}/"`,
+    schedule: { interval: `"${schedule}"` },
   }))
 
   configs.sort()
@@ -81,7 +81,13 @@ export async function run(): Promise<void> {
       core.getInput("tf-schedule"),
     )
 
-    state.updates = state.updates.concat(npmConfigs, actionConfigs, tfConfigs)
+    console.log(state.updates)
+
+    state.updates = [
+      ...new Set(state.updates.concat(npmConfigs, actionConfigs, tfConfigs)),
+    ]
+
+    console.log(state.updates)
 
     const newDocument = new YAML.Document(state)
     await fs.writeFile(DEPENDABOT_FILE, String(newDocument))

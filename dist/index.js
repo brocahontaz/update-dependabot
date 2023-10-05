@@ -3067,9 +3067,9 @@ const getPaths = async (type) => {
 };
 const buildConfigs = async (paths, ecosystem, schedule) => {
     const configs = paths.map((path) => ({
-        "package-ecosystem": ecosystem,
-        directory: `${path}/`,
-        schedule: { interval: schedule },
+        "package-ecosystem": `"${ecosystem}"`,
+        directory: `"${path}/"`,
+        schedule: { interval: `"${schedule}"` },
     }));
     configs.sort();
     return configs;
@@ -3085,7 +3085,11 @@ async function run() {
         const npmConfigs = await buildConfigs(npmPaths, "npm", core.getInput("npm-schedule"));
         const actionConfigs = await buildConfigs(actionPaths, "github-actions", core.getInput("action-schedule"));
         const tfConfigs = await buildConfigs(tfPaths, "terraform", core.getInput("tf-schedule"));
-        state.updates = state.updates.concat(npmConfigs, actionConfigs, tfConfigs);
+        console.log(state.updates);
+        state.updates = [
+            ...new Set(state.updates.concat(npmConfigs, actionConfigs, tfConfigs)),
+        ];
+        console.log(state.updates);
         const newDocument = new yaml_1.default.Document(state);
         await promises_1.default.writeFile(DEPENDABOT_FILE, String(newDocument));
     }
