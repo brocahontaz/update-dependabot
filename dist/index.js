@@ -3065,10 +3065,11 @@ const getPaths = async (type) => {
     const paths = await extractPaths(inputList);
     return paths;
 };
-const buildConfigs = async (paths, ecosystem, schedule) => {
+const buildConfigs = async (paths, ecosystem, registries, schedule) => {
     const configs = paths.map((path) => ({
         "package-ecosystem": `${ecosystem}`,
         directory: `${path}/`,
+        ...(registries != "" && { registries }),
         schedule: { interval: `${schedule}` },
     }));
     configs.sort();
@@ -3082,13 +3083,11 @@ async function run() {
         const npmPaths = await getPaths("npm-paths");
         const actionPaths = await getPaths("action-paths");
         const tfPaths = await getPaths("tf-paths");
-        const npmConfigs = await buildConfigs(npmPaths, "npm", core.getInput("npm-schedule"));
-        const actionConfigs = await buildConfigs(actionPaths, "github-actions", core.getInput("action-schedule"));
-        const tfConfigs = await buildConfigs(tfPaths, "terraform", core.getInput("tf-schedule"));
-        console.log(state.updates);
+        const npmConfigs = await buildConfigs(npmPaths, "npm", "", core.getInput("npm-schedule"));
+        const actionConfigs = await buildConfigs(actionPaths, "github-actions", "", core.getInput("action-schedule"));
+        const tfConfigs = await buildConfigs(tfPaths, "terraform", core.getInput("tf-registries"), core.getInput("tf-schedule"));
         const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs];
         state.updates = allConfigs;
-        console.log(state.updates);
         const newDocument = new yaml_1.default.Document(state);
         await promises_1.default.writeFile(DEPENDABOT_FILE, String(newDocument));
     }

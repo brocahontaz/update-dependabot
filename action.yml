@@ -29,6 +29,15 @@ inputs:
     description: Schedule for terraform updates
     required: false
     default: "weekly"
+  tf-registries:
+    description: Registries to use for terraform
+    required: false
+    default: ""
+  
+  registries:
+    description: Usable registries
+    required: false
+    default: ""
 
 # outputs:
 

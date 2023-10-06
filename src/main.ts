@@ -40,11 +40,13 @@ const getPaths = async (type: string) => {
 const buildConfigs = async (
   paths: string[],
   ecosystem: string,
+  registries: string,
   schedule: string,
 ) => {
   const configs = paths.map((path) => ({
     "package-ecosystem": `${ecosystem}`,
     directory: `${path}/`,
+    ...(registries != "" && { registries }),
     schedule: { interval: `${schedule}` },
   }))
 
@@ -66,28 +68,27 @@ export async function run(): Promise<void> {
     const npmConfigs = await buildConfigs(
       npmPaths,
       "npm",
+      "",
       core.getInput("npm-schedule"),
     )
 
     const actionConfigs = await buildConfigs(
       actionPaths,
       "github-actions",
+      "",
       core.getInput("action-schedule"),
     )
 
     const tfConfigs = await buildConfigs(
       tfPaths,
       "terraform",
+      core.getInput("tf-registries"),
       core.getInput("tf-schedule"),
     )
-
-    console.log(state.updates)
 
     const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs]
 
     state.updates = allConfigs
-
-    console.log(state.updates)
 
     const newDocument = new YAML.Document(state)
     await fs.writeFile(DEPENDABOT_FILE, String(newDocument))
