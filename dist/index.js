@@ -3083,6 +3083,8 @@ async function run() {
         const npmPaths = await getPaths("npm-paths");
         const actionPaths = await getPaths("action-paths");
         const tfPaths = await getPaths("tf-paths");
+        const registries = core.getMultilineInput("registries");
+        console.log("REGISTRIES", registries);
         const npmConfigs = await buildConfigs(npmPaths, "npm", "", core.getInput("npm-schedule"));
         const actionConfigs = await buildConfigs(actionPaths, "github-actions", "", core.getInput("action-schedule"));
         const tfConfigs = await buildConfigs(tfPaths, "terraform", core.getInput("tf-registries"), core.getInput("tf-schedule"));
