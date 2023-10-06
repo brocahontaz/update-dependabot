@@ -3069,7 +3069,7 @@ const getPaths = async (type) => {
 const buildConfigs = async (paths, ecosystem, registries, schedule) => {
     const configs = paths.map((path) => ({
         "package-ecosystem": `${ecosystem}`,
-        directory: `${path}/`,
+        directory: `${path != "." ? path : ""}/`,
         ...(registries != "" && { registries }),
         schedule: { interval: `${schedule}` },
     }));
