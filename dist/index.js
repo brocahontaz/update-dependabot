@@ -3076,8 +3076,9 @@ const buildConfigs = async (paths, ecosystem, registries, schedule) => {
     configs.sort();
     return configs;
 };
-const buildRegistries = async (registries) => {
-    return registries;
+const parseRegistries = async (registries) => {
+    const registriesYAML = yaml_1.default.parse(registries);
+    return registriesYAML;
 };
 async function run() {
     try {
@@ -3089,8 +3090,7 @@ async function run() {
         const tfPaths = await getPaths("tf-paths");
         const registries = core.getInput("registries");
         console.log("REGISTRIES", registries);
-        const registriesMultiline = core.getMultilineInput("registries");
-        const registriesConfig = await buildRegistries(registriesMultiline);
+        const registriesConfig = await parseRegistries(registries);
         console.log(registriesConfig);
         const npmConfigs = await buildConfigs(npmPaths, "npm", "", core.getInput("npm-schedule"));
         const actionConfigs = await buildConfigs(actionPaths, "github-actions", "", core.getInput("action-schedule"));
@@ -3098,7 +3098,7 @@ async function run() {
         const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs];
         state.updates = allConfigs;
         console.log("PRE", state.registries);
-        state.registries = JSON.stringify(registries);
+        state.registries = registriesConfig;
         console.log("POST", state.registries);
         const newDocument = new yaml_1.default.Document(state);
         await promises_1.default.writeFile(DEPENDABOT_FILE, String(newDocument));
