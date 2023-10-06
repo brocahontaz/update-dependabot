@@ -3080,7 +3080,7 @@ const buildConfigs = async (paths, ecosystem, registries, schedule) => {
     return configs;
 };
 const parseRegistries = async (registries) => {
-    const registriesYAML = registries != "" ? yaml_1.default.parse(registries) : "{}";
+    const registriesYAML = registries != "" ? yaml_1.default.parse(registries) : {};
     return registriesYAML;
 };
 async function run() {
