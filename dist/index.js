@@ -3092,7 +3092,7 @@ async function run() {
         const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs];
         state.updates = allConfigs;
         console.log("PRE", state.registries);
-        state.registries = registries;
+        state.registries = JSON.parse(registries);
         console.log("POST", state.registries);
         const newDocument = new yaml_1.default.Document(state);
         await promises_1.default.writeFile(DEPENDABOT_FILE, String(newDocument));

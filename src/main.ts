@@ -95,7 +95,7 @@ export async function run(): Promise<void> {
     state.updates = allConfigs
 
     console.log("PRE", state.registries)
-    state.registries = registries
+    state.registries = JSON.parse(registries)
     console.log("POST", state.registries)
 
     const newDocument = new YAML.Document(state)
