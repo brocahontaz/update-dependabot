@@ -56,6 +56,10 @@ const buildConfigs = async (
   return configs
 }
 
+const buildRegistries = async (registries: string[]) => {
+  return registries
+}
+
 export async function run(): Promise<void> {
   try {
     const dependabotFile = await getDependabotFile()
@@ -68,6 +72,10 @@ export async function run(): Promise<void> {
 
     const registries = core.getInput("registries")
     console.log("REGISTRIES", registries)
+
+    const registriesMultiline = core.getMultilineInput("registries")
+    const registriesConfig = await buildRegistries(registriesMultiline)
+    console.log(registriesConfig)
 
     const npmConfigs = await buildConfigs(
       npmPaths,
