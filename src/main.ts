@@ -16,7 +16,8 @@ const getDependabotFile = async () => {
   } catch (error) {
     file = `
   version: 2
-  updates: []`
+  updates: []
+  registries: {}`
 
     return file
   }
@@ -92,6 +93,10 @@ export async function run(): Promise<void> {
     const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs]
 
     state.updates = allConfigs
+
+    console.log("PRE", state.registries)
+    state.registries = registries
+    console.log("POST", state.registries)
 
     const newDocument = new YAML.Document(state)
     await fs.writeFile(DEPENDABOT_FILE, String(newDocument))

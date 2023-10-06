@@ -3050,7 +3050,8 @@ const getDependabotFile = async () => {
     catch (error) {
         file = `
   version: 2
-  updates: []`;
+  updates: []
+  registries: {}`;
         return file;
     }
 };
@@ -3090,6 +3091,9 @@ async function run() {
         const tfConfigs = await buildConfigs(tfPaths, "terraform", core.getInput("tf-registries"), core.getInput("tf-schedule"));
         const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs];
         state.updates = allConfigs;
+        console.log("PRE", state.registries);
+        state.registries = registries;
+        console.log("POST", state.registries);
         const newDocument = new yaml_1.default.Document(state);
         await promises_1.default.writeFile(DEPENDABOT_FILE, String(newDocument));
     }
