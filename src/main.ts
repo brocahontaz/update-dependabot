@@ -65,7 +65,7 @@ export async function run(): Promise<void> {
     const actionPaths: string[] = await getPaths("action-paths")
     const tfPaths: string[] = await getPaths("tf-paths")
 
-    const registries = core.getMultilineInput("registries")
+    const registries = core.getInput("registries")
     console.log("REGISTRIES", registries)
 
     const npmConfigs = await buildConfigs(
