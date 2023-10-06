@@ -61,7 +61,7 @@ const buildConfigs = async (
 }
 
 const parseRegistries = async (registries: string) => {
-  const registriesYAML = registries != "" ? YAML.parse(registries) : "{}"
+  const registriesYAML = registries != "" ? YAML.parse(registries) : {}
 
   return registriesYAML
 }
