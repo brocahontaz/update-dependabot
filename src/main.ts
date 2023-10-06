@@ -32,10 +32,14 @@ const extractPaths = async (list: string[]) => {
 
 const getPaths = async (type: string) => {
   const input: string = core.getInput(type)
-  const inputList: string[] = input.split(",")
-  const paths = await extractPaths(inputList)
 
-  return paths
+  if (input != "") {
+    const inputList: string[] = input.split(",")
+    const paths = await extractPaths(inputList)
+    return paths
+  }
+
+  return []
 }
 
 const buildConfigs = async (
@@ -57,7 +61,7 @@ const buildConfigs = async (
 }
 
 const parseRegistries = async (registries: string) => {
-  const registriesYAML = YAML.parse(registries)
+  const registriesYAML = registries != "" ? YAML.parse(registries) : "{}"
 
   return registriesYAML
 }
@@ -73,10 +77,7 @@ export async function run(): Promise<void> {
     const tfPaths: string[] = await getPaths("tf-paths")
 
     const registries = core.getInput("registries")
-    console.log("REGISTRIES", registries)
-
     const registriesConfig = await parseRegistries(registries)
-    console.log(registriesConfig)
 
     const npmConfigs = await buildConfigs(
       npmPaths,
@@ -102,10 +103,7 @@ export async function run(): Promise<void> {
     const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs]
 
     state.updates = allConfigs
-
-    console.log("PRE", state.registries)
     state.registries = registriesConfig
-    console.log("POST", state.registries)
 
     const newDocument = new YAML.Document(state)
     await fs.writeFile(DEPENDABOT_FILE, String(newDocument))
