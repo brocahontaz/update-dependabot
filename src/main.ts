@@ -46,7 +46,7 @@ const buildConfigs = async (
 ) => {
   const configs = paths.map((path) => ({
     "package-ecosystem": `${ecosystem}`,
-    directory: `${path}/`,
+    directory: `${path != "." ? path : ""}/`,
     ...(registries != "" && { registries }),
     schedule: { interval: `${schedule}` },
   }))
