@@ -46,7 +46,7 @@ const buildConfigs = async (
 ) => {
   const configs = paths.map((path) => ({
     "package-ecosystem": `${ecosystem}`,
-    directory: `${path}/`,
+    directory: `${path != "." ? path : ""}/`,
     ...(registries != "" && { registries }),
     schedule: { interval: `${schedule}` },
   }))
@@ -54,6 +54,12 @@ const buildConfigs = async (
   configs.sort()
 
   return configs
+}
+
+const parseRegistries = async (registries: string) => {
+  const registriesYAML = YAML.parse(registries)
+
+  return registriesYAML
 }
 
 export async function run(): Promise<void> {
@@ -68,6 +74,9 @@ export async function run(): Promise<void> {
 
     const registries = core.getInput("registries")
     console.log("REGISTRIES", registries)
+
+    const registriesConfig = await parseRegistries(registries)
+    console.log(registriesConfig)
 
     const npmConfigs = await buildConfigs(
       npmPaths,
@@ -95,7 +104,7 @@ export async function run(): Promise<void> {
     state.updates = allConfigs
 
     console.log("PRE", state.registries)
-    state.registries = registries
+    state.registries = registriesConfig
     console.log("POST", state.registries)
 
     const newDocument = new YAML.Document(state)
