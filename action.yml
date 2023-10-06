@@ -7,12 +7,35 @@ inputs:
     description: Paths to filter on for actions
     required: false
     default: ""
+  action-schedule:
+    description: Schedule for action updates
+    required: false
+    default: "weekly"
+
   npm-paths:
     description: Paths to filter on for npm
     required: false
     default: ""
+  npm-schedule:
+    description: Schedule for npm updates
+    required: false
+    default: "weekly"
+
   tf-paths:
     description: Paths to filter on for terraform
+    required: false
+    default: ""
+  tf-schedule:
+    description: Schedule for terraform updates
+    required: false
+    default: "weekly"
+  tf-registries:
+    description: Registries to use for terraform
+    required: false
+    default: ""
+  
+  registries:
+    description: Usable registries
     required: false
     default: ""
 
