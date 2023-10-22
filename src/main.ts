@@ -55,7 +55,9 @@ const buildConfigs = async (
     schedule: { interval: `${schedule}` },
   }))
 
-  configs.sort()
+  configs.sort((a, b) => {
+    return a.directory.toLocaleLowerCase() < b.directory.toLocaleLowerCase() ? -1 : 1
+  })
 
   return configs
 }
