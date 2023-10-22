@@ -56,7 +56,9 @@ const buildConfigs = async (
   }))
 
   configs.sort((a, b) => {
-    return a.directory.toLocaleLowerCase() < b.directory.toLocaleLowerCase() ? -1 : 1
+    return a.directory.toLocaleLowerCase() < b.directory.toLocaleLowerCase()
+      ? -1
+      : 1
   })
 
   return configs

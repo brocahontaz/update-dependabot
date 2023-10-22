@@ -3076,7 +3076,11 @@ const buildConfigs = async (paths, ecosystem, registries, schedule) => {
         ...(registries != "" && { registries }),
         schedule: { interval: `${schedule}` },
     }));
-    configs.sort();
+    configs.sort((a, b) => {
+        return a.directory.toLocaleLowerCase() < b.directory.toLocaleLowerCase()
+            ? -1
+            : 1;
+    });
     return configs;
 };
 const parseRegistries = async (registries) => {
