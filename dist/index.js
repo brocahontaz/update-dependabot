@@ -3095,6 +3095,9 @@ async function run() {
         const npmPaths = await getPaths("npm-paths");
         const actionPaths = await getPaths("action-paths");
         const tfPaths = await getPaths("tf-paths");
+        console.log("npm-paths", npmPaths);
+        console.log("action-paths", actionPaths);
+        console.log("tf-paths", tfPaths);
         const registries = core.getInput("registries");
         const registriesConfig = await parseRegistries(registries);
         const npmConfigs = await buildConfigs(npmPaths, "npm", "", core.getInput("npm-schedule"));
