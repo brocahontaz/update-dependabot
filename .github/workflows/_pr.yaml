@@ -3,7 +3,7 @@ on:
   pull_request:
 jobs:
   update:
-    uses: brocahontaz/update-dependabot/.github/workflows/update-dependabot.yaml@feat/dog-feed
+    uses: brocahontaz/update-dependabot/.github/workflows/update-dependabot.yaml@main
     secrets:
       CHECKOUT-TOKEN: ${{ secrets.FJALLBOT_WRITE_TOKEN }}
     with:

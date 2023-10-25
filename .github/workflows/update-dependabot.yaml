@@ -74,7 +74,7 @@ jobs:
           node-version: 20.x
 
       - name: Update dependabot config
-        uses: brocahontaz/update-dependabot@feat/dog-feed
+        uses: brocahontaz/update-dependabot@main
         with:
           action-paths: ${{ inputs.action-paths }}
           action-schedule: ${{ inputs.action-schedule }}
