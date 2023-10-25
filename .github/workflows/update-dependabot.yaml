@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.CHECKOUT-TOKEN }}
 
@@ -85,7 +85,7 @@ jobs:
           tf-registries: ${{ inputs.tf-registries }}
           registries: ${{ inputs.registries }}
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         id: autocommit
         with:
           commit_message: "chore: autofix dependabot config"
