@@ -25,9 +25,6 @@ const getDependabotFile = async () => {
 
 const extractPaths = async (list: string[]) => {
   const files = await glob(list, { dot: true })
-
-  console.log("files", files)
-
   const paths = [...new Set(files.map((file) => path.dirname(file)))]
 
   return paths
@@ -35,8 +32,6 @@ const extractPaths = async (list: string[]) => {
 
 const getPaths = async (type: string) => {
   const input: string = core.getInput(type)
-
-  console.log("getPaths input", input)
 
   if (input != "") {
     const inputList: string[] = input.split(",")
@@ -85,9 +80,9 @@ export async function run(): Promise<void> {
     const actionPaths: string[] = await getPaths("action-paths")
     const tfPaths: string[] = await getPaths("tf-paths")
 
-    console.log("npm-paths", npmPaths)
-    console.log("action-paths", actionPaths)
-    console.log("tf-paths", tfPaths)
+    console.log("Extracted npm paths", npmPaths)
+    console.log("Extracted action paths", actionPaths)
+    console.log("Extracted terraform paths", tfPaths)
 
     const registries = core.getInput("registries")
     const registriesConfig = await parseRegistries(registries)
