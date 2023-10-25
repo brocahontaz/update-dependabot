@@ -8,6 +8,6 @@ jobs:
       CHECKOUT-TOKEN: ${{ secrets.FJALLBOT_WRITE_TOKEN }}
     with:
       npm-paths: "**/package.json"
-      action-paths: "**/*.yaml"
+      action-paths: ".**/*.yaml"
       github-user-name: FjallBot
       github-user-email: fjallbot@gmail.com
