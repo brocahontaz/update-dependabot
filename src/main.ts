@@ -24,7 +24,7 @@ const getDependabotFile = async () => {
 }
 
 const extractPaths = async (list: string[]) => {
-  const files = await glob(list)
+  const files = await glob(list, { dot: true })
 
   console.log("files", files)
 
