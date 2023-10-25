@@ -25,6 +25,9 @@ const getDependabotFile = async () => {
 
 const extractPaths = async (list: string[]) => {
   const files = await glob(list)
+
+  console.log("files", files)
+
   const paths = [...new Set(files.map((file) => path.dirname(file)))]
 
   return paths
@@ -32,6 +35,8 @@ const extractPaths = async (list: string[]) => {
 
 const getPaths = async (type: string) => {
   const input: string = core.getInput(type)
+
+  console.log("getPaths input", input)
 
   if (input != "") {
     const inputList: string[] = input.split(",")
