@@ -3057,11 +3057,13 @@ const getDependabotFile = async () => {
 };
 const extractPaths = async (list) => {
     const files = await (0, glob_1.glob)(list);
+    console.log("files", files);
     const paths = [...new Set(files.map((file) => path_1.default.dirname(file)))];
     return paths;
 };
 const getPaths = async (type) => {
     const input = core.getInput(type);
+    console.log("getPaths input", input);
     if (input != "") {
         const inputList = input.split(",");
         const paths = await extractPaths(inputList);
