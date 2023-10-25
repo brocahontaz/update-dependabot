@@ -2,6 +2,10 @@ name: Update dependabot
 
 on:
   workflow_call:
+    secrets:
+      CHECKOUT-TOKEN:
+        description: Token to be used
+        required: true
     inputs:
       action-paths:
         description: Paths to filter on for actions
@@ -43,10 +47,6 @@ on:
         type: string
         required: false
         default: ""
-      github-token:
-        description: Token to be used
-        type: string
-        required: true
       github-user-name:
         description: Github user name to use for autocommit
         type: string
@@ -68,7 +68,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          token: ${{ inputs.github-token }}
+          token: ${{ secrets.github-token }}
 
       - name: Setup node
         uses: actions/setup-node@v4
