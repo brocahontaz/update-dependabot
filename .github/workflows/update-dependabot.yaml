@@ -1,0 +1,97 @@
+name: Update dependabot
+
+on:
+  workflow_call:
+    inputs:
+      action-paths:
+        description: Paths to filter on for actions
+        type: string
+        required: false
+        default: ""
+      action-schedule:
+        description: Schedule for action updates
+        type: string
+        required: false
+        default: "weekly"
+      npm-paths:
+        description: Paths to filter on for npm
+        type: string
+        required: false
+        default: ""
+      npm-schedule:
+        description: Schedule for action updates
+        type: string
+        required: false
+        default: "weekly"
+      tf-paths:
+        description: Paths to filter on for terraform
+        type: string
+        required: false
+        default: ""
+      tf-schedule:
+        description: Schedule for action updates
+        type: string
+        required: false
+        default: "weekly"
+      tf-registries:
+        description: Additional registries for terraform
+        type: string
+        required: false
+        default: ""
+      registries:
+        description: Additional registries to use
+        type: string
+        required: false
+        default: ""
+      github-token:
+        description: Token to be used
+        type: string
+        required: true
+      github-user-name:
+        description: Github user name to use for autocommit
+        type: string
+        required: true
+      github-user-email:
+        description: Github user email to use for autocommit
+        type: string
+        required: true
+
+jobs:
+  autofix:
+    if: github.actor != inputs.github-user-name
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ inputs.github-token }}
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        id: node
+        with:
+          node-version: 20.x
+
+      - name: Update dependabot config
+        uses: brocahontaz/update-dependabot@main
+        with:
+          action-paths: ${{ inputs.action-paths }}
+          action-schedule: ${{ inputs.action-schedule }}
+          npm-paths: ${{ inputs.npm-paths }}
+          npm-schedule: ${{ inputs.npm-schedule }}
+          tf-paths: ${{ inputs.tf-paths }}
+          tf-schedule: ${{ inputs.tf-schedule }}
+          tf-registries: ${{ inputs.tf-registries }}
+          registries: ${{ inputs.registries }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        id: autocommit
+        with:
+          commit_message: "chore: autofix dependabot config"
+          commit_user_name: ${{ inputs.github-user-name }}
+          commit_user_email: ${{ inputs.github-user-email }}
+          commit_author: ${{ inputs.github-user-name }} <${{ inputs.github-user-email }}>
