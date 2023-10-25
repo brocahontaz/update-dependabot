@@ -5,9 +5,9 @@ jobs:
   update:
     uses: brocahontaz/update-dependabot/.github/workflows/update-dependabot.yaml@feat/dog-feed
     secrets:
-      CHECKOUT-TOKEN: ${{ secrets.BRO_BOT_WRITE_TOKEN }}
+      CHECKOUT-TOKEN: ${{ secrets.FJALLBOT_WRITE_TOKEN }}
     with:
       npm-paths: "**/package.json"
       action-paths: "**/*.yaml"
-      github-user-name: BroBot
-      github-user-email: brobot@gmail.com
+      github-user-name: FjallBot
+      github-user-email: fjallbot@gmail.com
