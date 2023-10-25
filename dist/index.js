@@ -3056,7 +3056,7 @@ const getDependabotFile = async () => {
     }
 };
 const extractPaths = async (list) => {
-    const files = await (0, glob_1.glob)(list);
+    const files = await (0, glob_1.glob)(list, { dot: true });
     console.log("files", files);
     const paths = [...new Set(files.map((file) => path_1.default.dirname(file)))];
     return paths;
