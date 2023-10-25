@@ -3056,7 +3056,7 @@ const getDependabotFile = async () => {
     }
 };
 const extractPaths = async (list) => {
-    const files = await (0, glob_1.glob)(list);
+    const files = await (0, glob_1.glob)(list, { dot: true });
     const paths = [...new Set(files.map((file) => path_1.default.dirname(file)))];
     return paths;
 };
@@ -3095,6 +3095,9 @@ async function run() {
         const npmPaths = await getPaths("npm-paths");
         const actionPaths = await getPaths("action-paths");
         const tfPaths = await getPaths("tf-paths");
+        console.log("Extracted npm paths", npmPaths);
+        console.log("Extracted action paths", actionPaths);
+        console.log("Extracted terraform paths", tfPaths);
         const registries = core.getInput("registries");
         const registriesConfig = await parseRegistries(registries);
         const npmConfigs = await buildConfigs(npmPaths, "npm", "", core.getInput("npm-schedule"));
