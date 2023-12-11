@@ -3,6 +3,12 @@ import fs from "fs/promises"
 import { glob } from "glob"
 import YAML from "yaml"
 import path from "path"
+import {
+  GitHubDependabotV2Config2,
+  PackageEcosystem,
+  PackageEcosystemValues,
+  ScheduleInterval,
+} from "./DependabotTypes"
 
 const DEPENDABOT_FILE = "./.github/dependabot.yml"
 
@@ -44,14 +50,14 @@ const getPaths = async (type: string) => {
 
 const buildConfigs = async (
   paths: string[],
-  ecosystem: string,
+  ecosystem: PackageEcosystemValues,
   registries: string,
-  schedule: string,
-) => {
-  const configs = paths.map((path) => ({
+  schedule: ScheduleInterval,
+): Promise<PackageEcosystem[]> => {
+  const configs: PackageEcosystem[] = paths.map((path) => ({
     "package-ecosystem": `${ecosystem}`,
     directory: `${path != "." ? path : ""}/`,
-    ...(registries != "" && { registries }),
+    ...(registries && { registries: [registries] }),
     schedule: { interval: `${schedule}` },
   }))
 
@@ -74,7 +80,7 @@ export async function run(): Promise<void> {
   try {
     const dependabotFile = await getDependabotFile()
     const currentDocument = YAML.parseDocument(dependabotFile.toString())
-    const state = currentDocument.toJS()
+    const state = currentDocument.toJS() as GitHubDependabotV2Config2
 
     const npmPaths: string[] = await getPaths("npm-paths")
     const actionPaths: string[] = await getPaths("action-paths")
@@ -91,26 +97,59 @@ export async function run(): Promise<void> {
       npmPaths,
       "npm",
       "",
-      core.getInput("npm-schedule"),
+      core.getInput("npm-schedule") as ScheduleInterval,
     )
 
     const actionConfigs = await buildConfigs(
       actionPaths,
       "github-actions",
       "",
-      core.getInput("action-schedule"),
+      core.getInput("action-schedule") as ScheduleInterval,
     )
 
     const tfConfigs = await buildConfigs(
       tfPaths,
       "terraform",
       core.getInput("tf-registries"),
-      core.getInput("tf-schedule"),
+      core.getInput("tf-schedule") as ScheduleInterval,
     )
 
-    const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs]
+    const generatedConfigs: PackageEcosystem[] = [
+      ...npmConfigs,
+      ...actionConfigs,
+      ...tfConfigs,
+    ]
+    const currentConfigs = [...state.updates]
 
-    state.updates = allConfigs
+    const managedEcosystems: PackageEcosystemValues[] = [
+      "npm",
+      "github-actions",
+      "terraform",
+    ]
+
+    const updatedConfigs = currentConfigs.reduce((acc, current) => {
+      if (
+        !managedEcosystems.includes(
+          current["package-ecosystem"] as PackageEcosystemValues,
+        )
+      ) {
+        return acc.concat(current)
+      }
+
+      const generated = generatedConfigs.find(
+        (generated) => generated.directory === current.directory,
+      )
+
+      // Generated source has been removed, lets auto remove it
+      if (!generated) {
+        return acc
+      }
+
+      // Shallow merge the current one with the generated one
+      return acc.concat({ ...current, ...generated })
+    }, [] as PackageEcosystem[])
+
+    state.updates = updatedConfigs
     state.registries = registriesConfig
 
     const newDocument = new YAML.Document(state)

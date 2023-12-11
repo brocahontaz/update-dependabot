@@ -3073,7 +3073,7 @@ const buildConfigs = async (paths, ecosystem, registries, schedule) => {
     const configs = paths.map((path) => ({
         "package-ecosystem": `${ecosystem}`,
         directory: `${path != "." ? path : ""}/`,
-        ...(registries != "" && { registries }),
+        ...(registries && { registries: [registries] }),
         schedule: { interval: `${schedule}` },
     }));
     configs.sort((a, b) => {
@@ -3103,8 +3103,30 @@ async function run() {
         const npmConfigs = await buildConfigs(npmPaths, "npm", "", core.getInput("npm-schedule"));
         const actionConfigs = await buildConfigs(actionPaths, "github-actions", "", core.getInput("action-schedule"));
         const tfConfigs = await buildConfigs(tfPaths, "terraform", core.getInput("tf-registries"), core.getInput("tf-schedule"));
-        const allConfigs = [...npmConfigs, ...actionConfigs, ...tfConfigs];
-        state.updates = allConfigs;
+        const generatedConfigs = [
+            ...npmConfigs,
+            ...actionConfigs,
+            ...tfConfigs,
+        ];
+        const currentConfigs = [...state.updates];
+        const managedEcosystems = [
+            "npm",
+            "github-actions",
+            "terraform",
+        ];
+        const updatedConfigs = currentConfigs.reduce((acc, current) => {
+            if (!managedEcosystems.includes(current["package-ecosystem"])) {
+                return acc.concat(current);
+            }
+            const generated = generatedConfigs.find((generated) => generated.directory === current.directory);
+            // Generated source has been removed, lets auto remove it
+            if (!generated) {
+                return acc;
+            }
+            // Shallow merge the current one with the generated one
+            return acc.concat({ ...current, ...generated });
+        }, []);
+        state.updates = updatedConfigs;
         state.registries = registriesConfig;
         const newDocument = new yaml_1.default.Document(state);
         await promises_1.default.writeFile(DEPENDABOT_FILE, String(newDocument));
