@@ -146,7 +146,7 @@ export interface PackageEcosystem {
    * Disable automatic rebasing. 'auto' is the default and Dependabot will rebase open pull requests when changes are detected. 'disabled' will disable automatic rebasing.
    */
   "rebase-strategy"?: "auto" | "disabled"
-  registries?: [string, ...string[]]
+  registries?: [string, ...string[]] | "*"
   /**
    * Specify individual reviewers or teams of reviewers for all pull requests raised for a package manager. You must use the full team name, including the organization, as if you were @mentioning the team.
    */
