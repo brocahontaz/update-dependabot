@@ -3073,7 +3073,9 @@ const buildConfigs = async (paths, ecosystem, registries, schedule) => {
     const configs = paths.map((path) => ({
         "package-ecosystem": `${ecosystem}`,
         directory: `${path != "." ? path : ""}/`,
-        ...(registries && { registries: [registries] }),
+        ...(registries && {
+            registries: registries == "*" ? registries : [registries],
+        }),
         schedule: { interval: `${schedule}` },
     }));
     configs.sort((a, b) => {
